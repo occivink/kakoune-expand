@@ -2,7 +2,7 @@
 
 [kakoune](http://kakoune.org) plugin to select increasingly larger regions of text using a single command. Largely inspired by [Delapouite](https://github.com/delapouite)'s [expand-region](https://github.com/delapouite/kakoune-expand-region). This plugin should be mostly seen as an alternative implementation.
 
-See this [asciinema](https://asciinema.org/a/138326) for a quick demo.
+[![demo](https://asciinema.org/a/138326.png)](https://asciinema.org/a/138326)
 
 ## Install
 
