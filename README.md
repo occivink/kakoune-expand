@@ -4,7 +4,7 @@
 
 [![demo](https://asciinema.org/a/138326.png)](https://asciinema.org/a/138326)
 
-## Install
+## Setup
 
 Add `expand.kak` to your autoload dir: `~/.config/kak/autoload/`, or source it manually.
 
