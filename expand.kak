@@ -55,7 +55,7 @@ define-command expand %{
             # iterate over the candidates, and take the smallest selection
             # that is bigger than the current
             init_desc=$kak_selection_desc
-            best_desc=0.0,9999999.999
+            best_desc=1.1,9999999.999
             best_length=9999999
             IFS=:
             for current in $kak_opt_expand_results; do
