@@ -15,7 +15,7 @@ declare-option -hidden str-list expand_results
 define-command expand -docstring "
 Expand the current selection til the next semantic block
 " %{
-    eval -no-hooks -itersel %{
+    eval -itersel %{
         exec <a-:>
         unset-option buffer expand_results
         eval %opt{expand_commands}
@@ -61,7 +61,7 @@ Expand the current selection til the next semantic block
 }
 
 define-command expand-impl -hidden -params 1 %{
-    eval -no-hooks -draft -save-regs 'd/' %{
+    eval -draft -save-regs 'd/' %{
         try %{
             eval %arg{1}
             set-register d %val{selection_desc}
