@@ -2,12 +2,12 @@
 
 # exclude text objects with symetric delimiters as they yield too many false positives
 declare-option str expand_commands %{
-    expand-impl 'exec <a-a>b'
-    expand-impl 'exec <a-a>B'
-    expand-impl 'exec <a-a>r'
-    expand-impl 'exec <a-i>i'
-    expand-impl 'exec \'<a-:><a-;>k<a-K>^$<ret><a-i>i\''
-    expand-impl 'exec \'<a-:>j<a-K>^$<ret><a-i>i\''
+    expand-impl %{ exec <a-a>b }
+    expand-impl %{ exec <a-a>B }
+    expand-impl %{ exec <a-a>r }
+    expand-impl %{ exec <a-i>i }
+    expand-impl %{ exec '<a-:><a-;>k<a-K>^$<ret><a-i>i' }
+    expand-impl %{ exec '<a-:>j<a-K>^$<ret><a-i>i' }
 }
 
 declare-option -hidden str-list expand_results
@@ -20,7 +20,7 @@ Expand the current selection til the next semantic block
         unset-option buffer expand_results
         eval %opt{expand_commands}
         # compare the results and take the best
-        %sh{
+        select %sh{
             # returns 0 if $1 is a strict superset of $2
             compare_descs() {
                 if [ $1 = $2 ]; then
@@ -47,7 +47,8 @@ Expand the current selection til the next semantic block
             best_desc=1.1,9999999.999
             best_length=9999999
             IFS=:
-            for current in $kak_opt_expand_results; do
+            eval set -- "$kak_opt_expand_results"
+            for current in "$@"; do
                 desc=${current%_*}
                 length=${current#*_}
                 if compare_descs $desc $init_desc && [ $length -lt $best_length ]; then
@@ -55,7 +56,7 @@ Expand the current selection til the next semantic block
                     best_length=$length
                 fi
             done
-            printf "select %s\n" "$best_desc"
+            printf "%s" "$best_desc"
         }
     }
 }
