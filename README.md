@@ -16,12 +16,12 @@ It is possible to configure the expansion commands that are run by modifying the
 The default value (documented below) should be suitable for C-style languages. Be mindful of double expansion.
 ```
 declare-option str expand_commands %{
-    expand-impl 'exec <a-a>b'                            # parentheses
-    expand-impl 'exec <a-a>B'                            # braces
-    expand-impl 'exec <a-a>r'                            # brackets
-    expand-impl 'exec <a-i>i'                            # indent
-    expand-impl 'exec \'<a-:><a-;>k<a-K>^$<ret><a-i>i\'' # next ident level (upward)
-    expand-impl 'exec \'<a-:>j<a-K>^$<ret><a-i>i\''      # next ident level (downward)
+    expand-impl %{ exec <a-a>b }
+    expand-impl %{ exec <a-a>B }
+    expand-impl %{ exec <a-a>r }
+    expand-impl %{ exec <a-i>i }
+    expand-impl %{ exec '<a-:><a-;>k<a-K>^$<ret><a-i>i' } # previous indent level (upward)
+    expand-impl %{ exec '<a-:>j<a-K>^$<ret><a-i>i' }      # previous indent level (downward)
 }
 ```
 
