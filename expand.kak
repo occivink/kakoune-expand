@@ -65,7 +65,9 @@ define-command expand-impl -hidden -params 1 %{
     eval -draft -save-regs '/"|^@' %{
         try %{
             eval %arg{1}
-            set-option -add buffer expand_results "%val{selection_desc}_%val{selection_length}"
+            set-register d %val{selection_desc}
+            exec s.<ret>
+            set-option -add buffer expand_results "%reg{d}_%reg{#}"
         }
     }
 }
