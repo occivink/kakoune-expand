@@ -8,6 +8,8 @@
 
 Add `expand.kak` to your autoload dir: `~/.config/kak/autoload/`, or source it manually.
 
+You need at least Kakoune v2019.01.20 to use this plugin.
+
 ## Usage
 
 Simply call the `expand` command to select the smallest region that is bigger than the current.
