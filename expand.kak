@@ -1,7 +1,7 @@
 # increases the size of the current selection(s) by repeatedly calling "expand"
 # or decrease their sizes by calling "shrink"
 
-# exclude text objects with symetric delimiters as they yield too many false positives
+# exclude text objects with symmetric delimiters as they yield too many false positives
 decl str-list expand_commands \
     %{ exec <a-a>b } \
     %{ exec <a-a>B } \
@@ -43,16 +43,17 @@ def expand-shrink-impl -hidden -params .. %{
         printf 'set -add buffer expand_shrink_results SELECTION\n'
     }
 
-    eval select %sh{
+    eval %sh{
+        operation="$1"
         # desc_op is used to determine if a selection is a subset/superset of another
         # length_op is used to determine if a candidate result is better than the best yet
-        if [ "$1" = expand ]; then
+        if [ "$operation" = expand ]; then
             desc_op="-gt"
             # when expanding, we want to take the smallest result that is bigger than the current
             # so we start at 99999 and proceed if we're smaller
             length_op="-lt"
             default_length=99999
-        elif [ "$1" = shrink ]; then
+        elif [ "$operation" = shrink ]; then
             desc_op="-lt"
             # when shrinking, we want to take the biggest result that is smaller than the current
             # so we start at 0 and proceed if we're bigger
@@ -68,6 +69,7 @@ def expand-shrink-impl -hidden -params .. %{
         is_valid() {
             # for comparing selections, we simply encode each end as (line * 1000 + col)
             # and compare these numbers
+            # 999 columns ought to be enough for anybody
             lhs_beg=${1%,*}
             lhs_beg=$(( ${lhs_beg%.*} * 1000 + ${lhs_beg#*.} ))
             lhs_end=${1#*,}
@@ -103,6 +105,8 @@ def expand-shrink-impl -hidden -params .. %{
         result_desc=""
         result_best_length=$default_length
 
+        output=""
+
         # each input selection produces multiple results, and each result contains multiple selections
         # we decide which result to keep using the selection length
         # in iteration order order we should see ($input_desc (($desc $length)* RESULT)* SELECTION)*
@@ -112,7 +116,7 @@ def expand-shrink-impl -hidden -params .. %{
                 input_desc="$1"
             elif [ "$1" = SELECTION ]; then
                 if [ "$best_length" -ne $default_length ]; then
-                    printf ' %s' "$best_desc"
+                    output="$output $best_desc"
                 fi
                 input_desc=""
                 best_length=$default_length
@@ -138,6 +142,12 @@ def expand-shrink-impl -hidden -params .. %{
             fi
             shift
         done
+
+        if [ "$output" != "" ]; then
+            printf 'select %s' "$output"
+        else
+            printf "fail 'Cannot %s further'" "$operation"
+        fi
     }
 }
 
