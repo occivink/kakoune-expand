@@ -20,11 +20,15 @@ decl str-list shrink_commands \
     %{ exec 's\w+<ret>' } \
     %{ exec '<a-X>' }
 
-def expand -docstring '..' %{
+def expand -docstring '
+Expand the current selections up to their next semantic block
+' %{
     expand-shrink-impl expand %opt{expand_commands}
 }
 
-def shrink -docstring '..' %{
+def shrink -docstring '
+Shrink the current selections down to their next semantic block
+' %{
     expand-shrink-impl shrink %opt{shrink_commands}
 }
 
