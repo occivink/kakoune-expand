@@ -2,7 +2,7 @@
 # or decrease their sizes by calling "shrink"
 
 # exclude text objects with symmetric delimiters as they yield too many false positives
-decl str-list expand_commands \
+declare-option str-list expand_commands \
     %{ exec <a-a>b } \
     %{ exec <a-a>B } \
     %{ exec <a-a>r } \
@@ -11,7 +11,7 @@ decl str-list expand_commands \
     %{ exec '<a-:><a-;>k<a-K>^$<ret><a-i>i' } \
     %{ exec '<a-:>j<a-K>^$<ret><a-i>i' }
 
-decl str-list shrink_commands \
+declare-option str-list shrink_commands \
     %{ exec <a-s> } \
     %{ exec 's\{.*?\}<ret>' } \
     %{ exec 's\[.*?\]<ret>' } \
@@ -20,21 +20,36 @@ decl str-list shrink_commands \
     %{ exec 's\w+<ret>' } \
     %{ exec '<a-X>' }
 
-def expand -docstring '
+declare-option str selection_stack ''
+
+define-command expand -docstring '
 Expand the current selections up to their next semantic block
 ' %{
+    evaluate-commands %sh{
+        eval "set -- ${kak_opt_selection_stack}"
+        printf "%s " "set-option global selection_stack %{$kak_selection_desc $@}"
+    }
     expand-shrink-impl expand %opt{expand_commands}
 }
 
-def shrink -docstring '
+define-command shrink -docstring '
 Shrink the current selections down to their next semantic block
 ' %{
     expand-shrink-impl shrink %opt{shrink_commands}
 }
 
-decl -hidden str-list expand_shrink_results
+define-command reduce -docstring '
+Reduce current selection to previous state
+' %{ evaluate-commands %sh{
+    eval "set -- ${kak_opt_selection_stack}"
+    [ -n "$1" ] && printf "%s\n" "select $1"
+    shift
+    printf "%s " "set-option global selection_stack %{$@}"
+}}
 
-def expand-shrink-impl -hidden -params .. %{
+declare-option -hidden str-list expand_shrink_results
+
+define-command expand-shrink-impl -hidden -params .. %{
     unset buffer expand_shrink_results
     eval -no-hooks -itersel %sh{
         i=2
@@ -155,7 +170,7 @@ def expand-shrink-impl -hidden -params .. %{
     }
 }
 
-def expand-shrink-gen-result -hidden -params 1 %{
+define-command expand-shrink-gen-result -hidden -params 1 %{
     eval -no-hooks -draft -save-regs '/"|^@' %{
         try %{
             eval -no-hooks %arg{1}
