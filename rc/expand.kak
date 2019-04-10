@@ -27,7 +27,7 @@ Expand the current selections up to their next semantic block
 ' %{
     evaluate-commands %sh{
         eval "set -- ${kak_opt_selection_stack}"
-        printf "%s " "set-option global selection_stack %{$kak_selection_desc $@}"
+        printf "%s " "set-option buffer selection_stack %{$kak_selection_desc $@}"
     }
     expand-shrink-impl expand %opt{expand_commands}
 }
@@ -44,7 +44,7 @@ Reduce current selection to previous state
     eval "set -- ${kak_opt_selection_stack}"
     [ -n "$1" ] && printf "%s\n" "select $1"
     shift
-    printf "%s " "set-option global selection_stack %{$@}"
+    printf "%s " "set-option buffer selection_stack %{$@}"
 }}
 
 declare-option -hidden str-list expand_shrink_results
