@@ -1,3 +1,5 @@
+provide-module expand %{
+
 # increases the size of the current selection by repeatedly calling "expand"
 
 # exclude text objects with symetric delimiters as they yield too many false positives
@@ -69,3 +71,7 @@ define-command expand-impl -hidden -params 1 %{
         }
     }
 }
+
+}
+
+require-module expand

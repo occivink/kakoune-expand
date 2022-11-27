@@ -37,6 +37,10 @@ map -docstring "expand" global expand <space> ': expand<ret>'
 map -docstring "expand ↻" global user E       ': expand; enter-user-mode -lock expand<ret>'
 ```
 
+## Tests
+
+The `test.kak` file contains tests for the plugin. To execute these tests, simply run `kak -n -e 'source test.kak ; exit'`: if the kakoune instance stays open, the tests have somehow failed and the current state can be inspected.
+
 ## License
 
 Unlicense
